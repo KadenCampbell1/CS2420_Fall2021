@@ -1,0 +1,6 @@
+email is best form of contact.
+project 1 due sept 18
+
+big O notation
+O(n)
+order to the n
