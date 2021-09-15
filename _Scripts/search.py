@@ -16,8 +16,6 @@ def linear_search(lyst, target):
 
 
 def binary_search(lyst, target):
-    # if len(lyst) > 1:
-    #     i = (len(lyst) // 2) - 1
     i = len(lyst) - 1
     if i == 0:
         if lyst[i] == target:
@@ -57,11 +55,13 @@ def jump_search(lyst, target):
                 i += 1
             return False
         i = i + increment_value
+        if i >= len(lyst):
+            i = len(lyst)-1
     return False
 
 
 def make_data():
-    data_size = 10
+    data_size = 1_000_000
     seed(0)
     data = sample(range(data_size * 3), k=data_size)
     data.sort()
@@ -73,10 +73,10 @@ def main():
     data = make_data()
     test_lyst = next(data)
     test_num = 1
-    #   1 8 9 12 13 15 16 24 27 28
-
+    #   1 8 9 12 13 15 16 24 27 28 @10 sample
+    #   29684821
     start = time.perf_counter()
-    result = linear_search(test_lyst, test_num)
+    result = linear_search(test_lyst, test_lyst[-1])
     end = time.perf_counter()
     run_time = end - start
 
@@ -84,7 +84,7 @@ def main():
     print(result)
 
     start = time.perf_counter()
-    result = binary_search(test_lyst, test_num)
+    result = binary_search(test_lyst, test_lyst[-1])
     end = time.perf_counter()
     run_time = end - start
 
@@ -92,7 +92,7 @@ def main():
     print(result)
 
     start = time.perf_counter()
-    result = jump_search(test_lyst, test_num)
+    result = jump_search(test_lyst, test_lyst[-1])
     end = time.perf_counter()
     run_time = end - start
 
