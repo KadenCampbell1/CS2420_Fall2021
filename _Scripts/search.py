@@ -22,6 +22,8 @@ def binary_search(lyst, target):
             result = True
         else:
             result = False
+    elif i == -1:
+        result = False
     else:
         if lyst[i] == target:
             result = True
@@ -55,13 +57,15 @@ def jump_search(lyst, target):
                 i += 1
             return False
         i = i + increment_value
+        if i >= len(lyst) and target > lyst[len(lyst)-1]:
+            return False
         if i >= len(lyst):
             i = len(lyst)-1
     return False
 
 
 def make_data():
-    data_size = 1_000_000
+    data_size = 100_000_000
     seed(0)
     data = sample(range(data_size * 3), k=data_size)
     data.sort()
@@ -73,26 +77,121 @@ def main():
     data = make_data()
     test_lyst = next(data)
     test_num = 1
-    #   1 8 9 12 13 15 16 24 27 28 @10 sample
-    #   29684821
+
+    print("---linear search for first element.---")
+
     start = time.perf_counter()
-    result = linear_search(test_lyst, test_lyst[-1])
+    result = linear_search(test_lyst, test_lyst[0])
     end = time.perf_counter()
     run_time = end - start
 
     print(run_time)
     print(result)
 
+    print("---binary search for first element.---")
+
     start = time.perf_counter()
-    result = binary_search(test_lyst, test_lyst[-1])
+    result = binary_search(test_lyst, test_lyst[0])
     end = time.perf_counter()
     run_time = end - start
 
     print(run_time)
     print(result)
 
+    print("---jump search for first element.---")
+
     start = time.perf_counter()
-    result = jump_search(test_lyst, test_lyst[-1])
+    result = jump_search(test_lyst, test_lyst[0])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---linear search for element at the middle.---")
+
+    start = time.perf_counter()
+    result = linear_search(test_lyst, test_lyst[len(test_lyst)//2])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---binary search for element at the middle.---")
+
+    start = time.perf_counter()
+    result = binary_search(test_lyst, test_lyst[len(test_lyst)//2])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---jump search for element at the middle.---")
+
+    start = time.perf_counter()
+    result = jump_search(test_lyst, test_lyst[len(test_lyst)//2])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---linear search for element at the end.---")
+
+    start = time.perf_counter()
+    result = linear_search(test_lyst, test_lyst[len(test_lyst)-1])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---binary search for element at the end.---")
+
+    start = time.perf_counter()
+    result = binary_search(test_lyst, test_lyst[len(test_lyst)-1])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---jump search for element at the end.---")
+
+    start = time.perf_counter()
+    result = jump_search(test_lyst, test_lyst[len(test_lyst)-1])
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---linear search for element NOT in list.---")
+
+    start = time.perf_counter()
+    result = linear_search(test_lyst, -1)
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---binary search for element NOT in list.---")
+
+    start = time.perf_counter()
+    result = binary_search(test_lyst, -1)
+    end = time.perf_counter()
+    run_time = end - start
+
+    print(run_time)
+    print(result)
+
+    print("---jump search for element NOT in list.---")
+
+    start = time.perf_counter()
+    result = jump_search(test_lyst, -1)
     end = time.perf_counter()
     run_time = end - start
 
