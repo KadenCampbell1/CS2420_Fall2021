@@ -65,7 +65,7 @@ def jump_search(lyst, target):
 
 
 def make_data():
-    data_size = 100_000_000
+    data_size = 10_000_000
     seed(0)
     data = sample(range(data_size * 3), k=data_size)
     data.sort()
