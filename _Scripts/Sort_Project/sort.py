@@ -3,7 +3,8 @@ import time
 
 
 def quicksort(lyst):
-    pass
+    result = []
+    return result
 
 
 def mergesort(lyst):
@@ -28,18 +29,25 @@ def selection_sort(lyst):
 
 def insertion_sort(lyst):
     result = []
+
     while len(lyst) > 0:
         num = lyst[0]
-        if len(result) is 0:
-            result.append(lyst.pop(0))
-        for i in range(len(lyst)):
-            if result[i] < num:
-                result.insert(i-1, lyst.pop(0))
+        i = 0
+
+        while num == lyst[0]:
+            if i == len(result):
+                result.append(lyst.pop(0))
+            if result[i] > num:
+                result.insert(i, lyst.pop(0))
+            if len(lyst) == 0:
+                return result
+            i += 1
 
 
 def is_sorted(lyst):
     unsorted_lyst = lyst.copy()
     lyst.sort()
+
     for i in range(len(lyst)):
         if lyst[i] is not unsorted_lyst[i]:
             return False
@@ -57,8 +65,32 @@ def make_data():
 def main():
     data = make_data()
     lyst = next(data)
-    test_lyst = lyst.copy()
 
+    test_lyst = lyst.copy()
+    print("-- Quick Sort --")
+    start = time.perf_counter()
+    result = quicksort(test_lyst)
+    end = time.perf_counter()
+    run_time = end - start
+    sort_result = is_sorted(result)
+
+    print(run_time)
+    print(sort_result)
+    print(result)
+
+    # test_lyst = lyst.copy()
+    # print("-- Merge Sort --")
+    # start = time.perf_counter()
+    # result = mergesort(test_lyst)
+    # end = time.perf_counter()
+    # run_time = end - start
+    # sort_result = is_sorted(result)
+    #
+    # print(run_time)
+    # print(sort_result)
+    # print(result)
+
+    test_lyst = lyst.copy()
     print("-- Selection Sort --")
     start = time.perf_counter()
     result = selection_sort(test_lyst)
@@ -71,6 +103,16 @@ def main():
     print(result)
 
     test_lyst = lyst.copy()
+    print("-- Insertion Sort --")
+    start = time.perf_counter()
+    result = insertion_sort(test_lyst)
+    end = time.perf_counter()
+    run_time = end - start
+    sort_result = is_sorted(result)
+
+    print(run_time)
+    print(sort_result)
+    print(result)
 
     # timsort
 
