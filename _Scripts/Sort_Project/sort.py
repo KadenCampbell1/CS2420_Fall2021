@@ -3,12 +3,76 @@ import time
 
 
 def quicksort(lyst):
+    low = []
+    high = []
     result = []
+    while len(lyst) > 1:
+        pivot = lyst.pop(0)
+        lyst_len = len(lyst)
+        i = 0
+        while i < lyst_len:
+            if pivot > lyst[0]:
+                low.append(lyst.pop(0))
+            else:
+                high.append(lyst.pop(0))
+            i += 1
+        low.append(pivot)
+
+    for i in low:
+        result.append(i)
+    for i in high:
+        result.append(i)
+
+    if not is_sorted(result):
+        result = quicksort(result)
+
     return result
 
 
 def mergesort(lyst):
-    pass
+    result = []
+    left_half = []
+    right_half = []
+
+    def half_lyst(h_lyst, low_high=None):
+        lyst_len = len(h_lyst) // 2
+        if lyst_len > 0:
+            half_lyst(h_lyst[:lyst_len], False)
+            half_lyst(h_lyst[lyst_len:], True)
+        else:
+            if low_high is False:
+                left_half.append(h_lyst)
+            if low_high is True:
+                right_half.append(h_lyst)
+        # return h_lyst
+
+    def sort_lyst(s_lyst):
+        return_lyst = []
+        for i, l in s_lyst:
+            print("i: " + i + "\n" + "l: " + l)
+        i = 0
+        while i < len(s_lyst):
+            if len(s_lyst) == 1:
+                return_lyst.append(s_lyst.pop(0))
+            elif s_lyst[0] < s_lyst[1]:
+                return_lyst.append(s_lyst.pop(0))
+            else:
+                return_lyst.append(s_lyst.pop(1))
+
+        return return_lyst
+
+    half_lyst(lyst)
+
+
+    i = 0
+    while i < len(lyst):
+        if lyst[0] < lyst[1]:
+            result.append(lyst.pop(0))
+        else:
+            result.append(lyst.pop(1))
+        i += 1
+
+    return result
 
 
 def selection_sort(lyst):
@@ -78,17 +142,17 @@ def main():
     print(sort_result)
     print(result)
 
-    # test_lyst = lyst.copy()
-    # print("-- Merge Sort --")
-    # start = time.perf_counter()
-    # result = mergesort(test_lyst)
-    # end = time.perf_counter()
-    # run_time = end - start
-    # sort_result = is_sorted(result)
-    #
-    # print(run_time)
-    # print(sort_result)
-    # print(result)
+    test_lyst = lyst.copy()
+    print("-- Merge Sort --")
+    start = time.perf_counter()
+    result = mergesort(test_lyst)
+    end = time.perf_counter()
+    run_time = end - start
+    sort_result = is_sorted(result)
+
+    print(run_time)
+    print(sort_result)
+    print(result)
 
     test_lyst = lyst.copy()
     print("-- Selection Sort --")
