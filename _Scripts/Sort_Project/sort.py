@@ -36,7 +36,7 @@ def mergesort(lyst):
 
     def half_lyst(h_lyst, low_high=None):
         lyst_len = len(h_lyst) // 2
-        if lyst_len > 0:
+        if lyst_len > 1:
             half_lyst(h_lyst[:lyst_len], False)
             half_lyst(h_lyst[lyst_len:], True)
         else:
@@ -48,21 +48,35 @@ def mergesort(lyst):
 
     def sort_lyst(s_lyst):
         return_lyst = []
-        for i, l in s_lyst:
-            print("i: " + i + "\n" + "l: " + l)
+
         i = 0
         while i < len(s_lyst):
-            if len(s_lyst) == 1:
-                return_lyst.append(s_lyst.pop(0))
-            elif s_lyst[0] < s_lyst[1]:
-                return_lyst.append(s_lyst.pop(0))
-            else:
-                return_lyst.append(s_lyst.pop(1))
+            v = 0
+            while v < len(s_lyst[i]):
+                if v + 1 >= len(s_lyst):
+                    pass
+                else:
+                    if s_lyst[i][v] > s_lyst[i][v + 1]:
+                        return_lyst.append(s_lyst[i][v + 1])
+                        return_lyst.append(s_lyst[i][v])
+                    else:
+                        return_lyst.append(s_lyst[i][v])
+                        return_lyst.append(s_lyst[i][v+1])
+                v += 1
+            i += 1
+
+            # if len(s_lyst) == 1:
+            #     return_lyst.append(s_lyst.pop(0))
+            # elif s_lyst[0] < s_lyst[1]:
+            #     return_lyst.append(s_lyst.pop(0))
+            # else:
+            #     return_lyst.append(s_lyst.pop(1))
 
         return return_lyst
 
     half_lyst(lyst)
-
+    sort_lyst(left_half)
+    sort_lyst(right_half)
 
     i = 0
     while i < len(lyst):
