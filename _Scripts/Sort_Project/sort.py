@@ -1,4 +1,5 @@
 from random import seed, sample
+import secrets
 import time
 
 
@@ -7,7 +8,7 @@ def quicksort(lyst):
     high = []
     result = []
     while len(lyst) > 1:
-        pivot = lyst.pop(0)
+        pivot = lyst.pop(secrets.randbelow(len(lyst)))
         lyst_len = len(lyst)
         i = 0
         while i < lyst_len:
@@ -30,9 +31,7 @@ def quicksort(lyst):
 
 
 def mergesort(lyst):
-    # result = []
     split_lyst = []
-    # right_half = []
 
     def half_lyst(h_lyst):
         lyst_len = len(h_lyst) // 2
@@ -41,7 +40,6 @@ def mergesort(lyst):
             half_lyst(h_lyst[lyst_len:])
         else:
             split_lyst.append(h_lyst)
-        # return h_lyst
 
     def sort_lyst(s_lyst):
         result = []
@@ -95,49 +93,6 @@ def mergesort(lyst):
     half_lyst(lyst)
     return sort_lyst(split_lyst)
 
-    #
-    # def sort_lyst(s_lyst):
-    #     return_lyst = []
-    #
-    #     i = 0
-    #     while i < len(s_lyst):
-    #         v = 0
-    #         while v < len(s_lyst[i]):
-    #             if v + 1 >= len(s_lyst):
-    #                 pass
-    #             else:
-    #                 if s_lyst[i][v] > s_lyst[i][v + 1]:
-    #                     return_lyst.append(s_lyst[i][v + 1])
-    #                     return_lyst.append(s_lyst[i][v])
-    #                 else:
-    #                     return_lyst.append(s_lyst[i][v])
-    #                     return_lyst.append(s_lyst[i][v+1])
-    #             v += 1
-    #         i += 1
-    #
-    #         # if len(s_lyst) == 1:
-    #         #     return_lyst.append(s_lyst.pop(0))
-    #         # elif s_lyst[0] < s_lyst[1]:
-    #         #     return_lyst.append(s_lyst.pop(0))
-    #         # else:
-    #         #     return_lyst.append(s_lyst.pop(1))
-    #
-    #     return return_lyst
-    #
-    # half_lyst(lyst)
-    # sort_lyst(left_half)
-    # sort_lyst(right_half)
-    #
-    # i = 0
-    # while i < len(lyst):
-    #     if lyst[0] < lyst[1]:
-    #         result.append(lyst.pop(0))
-    #     else:
-    #         result.append(lyst.pop(1))
-    #     i += 1
-    #
-    # return result
-
 
 def selection_sort(lyst):
     result = []
@@ -172,9 +127,29 @@ def insertion_sort(lyst):
             i += 1
 
 
+# def is_sorted(lyst):
+#     unsorted_lyst = lyst.copy()
+#     unsorted_lyst.sort()
+#
+#     for i in range(len(lyst)):
+#         if lyst[i] is not unsorted_lyst[i]:
+#             return False
+#     return True
+
 def is_sorted(lyst):
     unsorted_lyst = lyst.copy()
-    lyst.sort()
+
+    # index = 0
+    # while index < len(lyst):
+    #     if index + 1 < len(lyst):
+    #         if lyst[index] > lyst[index + 1]:
+    #             return False
+    #         index += 1
+
+    for i in range(len(lyst)):
+        if i + 1 < len(lyst):
+            if lyst[i] > lyst[i + 1]:
+                return False
 
     for i in range(len(lyst)):
         if lyst[i] is not unsorted_lyst[i]:
@@ -183,7 +158,7 @@ def is_sorted(lyst):
 
 
 def make_data():
-    data_size = 10_000
+    data_size = 10
     seed(0)
     data = sample(range(data_size * 3), k=data_size)
     while True:
