@@ -226,7 +226,6 @@ def main():
 
     print(run_time)
     print(sort_result)
-    print(result)
 
     test_lyst = lyst.copy()
     print("-- Merge Sort --")
@@ -238,7 +237,6 @@ def main():
 
     print(run_time)
     print(sort_result)
-    print(result)
 
     test_lyst = lyst.copy()
     print("-- Selection Sort --")
@@ -250,7 +248,6 @@ def main():
 
     print(run_time)
     print(sort_result)
-    print(result)
 
     test_lyst = lyst.copy()
     print("-- Insertion Sort --")
@@ -262,7 +259,6 @@ def main():
 
     print(run_time)
     print(sort_result)
-    print(result)
 
     test_lyst = lyst.copy()
     print("-- Tim Sort --")
@@ -274,7 +270,6 @@ def main():
 
     print(run_time)
     print(sort_result)
-    print(result)
 
 
 if __name__ == "__main__":
