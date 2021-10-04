@@ -1,5 +1,5 @@
 class Course:
-    def __init__(self, course_number, course_name, credit_hrs, grades):
+    def __init__(self, course_number=0, course_name="", credit_hrs=0, grades=0):
         self.course_number = course_number
         self.course_name = course_name
         self.credit_hrs = credit_hrs
@@ -20,3 +20,5 @@ class Course:
     def __str__(self):
         return f"cs{self.course_number} {self.course_name} Grade: {self.grades:0.1f} " \
                f"Credit Hours: {self.credit_hrs:0.1f}"
+
+    # needs next variable?
