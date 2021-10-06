@@ -1,6 +1,6 @@
 class Course:
     def __init__(self, course_number: int = 0, course_name: str = "",
-                 credit_hrs: float = 0.0, grades: float = 0.0, next=None):
+                 credit_hrs: float = 0.0, grades: float = 0.0):
         if type(course_number) == int and course_number >= 0:
             self.course_number = course_number
         else:
@@ -18,7 +18,7 @@ class Course:
         else:
             raise ValueError
 
-        self.next = next
+        self.next = None
 
     def number(self):
         return int(self.course_number)
@@ -32,8 +32,11 @@ class Course:
     def grade(self):
         return float(self.grades)
 
-    def set_next(self, next):
-        self.next = next
+    def set_next(self, node):
+        self.next = node
+
+    def get_next(self):
+        return self.next
 
     def __str__(self):
         return f"cs{self.course_number} {self.course_name} Grade: {self.grades:0.1f} " \

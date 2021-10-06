@@ -5,10 +5,12 @@ from courselist import CourseList
 def main():
     with open("data.txt") as DATA_FILE:
         data_lyst = [x.strip().split(",") for x in DATA_FILE.readlines()]
-
-    print(data_lyst[0][2])
+    course_list = CourseList()
     for i in data_lyst:
-        Course(course_number=i[0])
+        current_course = Course(course_number=int(i[0]), course_name=i[1], credit_hrs=float(i[2]), grades=float(i[3]))
+        course_list.insert(current_course)
+
+    print(course_list)
 
 
 if __name__ == "__main__":
