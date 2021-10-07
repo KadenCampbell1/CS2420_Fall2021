@@ -5,12 +5,23 @@ class CourseList:
 
     # inserts at the end currently
     def insert(self, node):
+        class_num = node.number()
         if self.head is None:
             self.head = node
         else:
+            # node_pointer = node.next
+            # while node_pointer is None:
             for current_node in self:
-                pass
-            current_node.set_next(node)
+                if current_node.next is None:
+                    current_node.set_next(node)
+                else:
+                    next_node = current_node.next
+                    if next_node.number() > class_num:
+                        pointer = current_node.get_next()
+                        current_node.set_next(node)
+                        node.set_next(pointer)
+                    elif next_node.get_next() is None:
+                        next_node.set_next(node)
 
     def remove(self, number):
         if self.head is None:
@@ -64,8 +75,7 @@ class CourseList:
     def __str__(self):
         nodes = ""
         for node in self:
-            nodes.join(str(node) + "\n")
-            nodes.join("1")
+            nodes += f"{str(node)}\n"
         return nodes
 
     def __iter__(self):

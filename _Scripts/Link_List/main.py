@@ -10,6 +10,23 @@ def main():
         current_course = Course(course_number=int(i[0]), course_name=i[1], credit_hrs=float(i[2]), grades=float(i[3]))
         course_list.insert(current_course)
 
+    print("original")
+    print(course_list)
+
+    course_list.remove(1410)
+
+    print("remove 1410")
+    print(course_list)
+
+    course_list.insert(Course(1410, "one", 1.0, 1.0))
+    course_list.insert(Course(1410, "two", 1.0, 1.0))
+
+    print("insert 2 1410")
+    print(course_list)
+
+    course_list.remove_all(1410)
+
+    print("remove all 1400")
     print(course_list)
 
 
