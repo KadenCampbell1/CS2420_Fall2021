@@ -2,8 +2,8 @@
 
 Functions:
 push(item) -- places item onto the top of the Stack object.
-pop() -- removes and returns the top item in the Stack.
-top() -- returns the top item of the Stack without removing it.
+pop([obj]) -- removes and returns the top item in the Stack.
+top([obj]) -- returns the top item of the Stack without removing it.
 size() -- returns the number of items on the Stack.
 clear() -- empties the Stack.
 __iter__() -- points to the next object and yields the objects in Stack()
@@ -28,19 +28,37 @@ class Stack:
         obj.set_next(self.head)
         self.head = obj
 
-    def pop(self):
-        """removes and returns the top item in Stack()"""
+    def pop(self, obj_type=False):
+        """removes and returns the top item in Stack()
+
+        if obj is false it returns the value.
+        true it returns the object
+        arguments:
+        obj -- type bool
+        """
         if self.head is None:
             raise IndexError
         obj = self.head
         self.head = obj.get_next()
-        return obj
+        if obj_type is False:
+            return obj.get_item()
+        else:
+            return obj
 
-    def top(self):
-        """returns the top item in Stack() without removing the top"""
+    def top(self, obj_type=False):
+        """returns the top item in Stack() without removing the top
+
+        if obj is false it returns the value.
+        true it returns the object
+        arguments:
+        obj -- type bool
+        """
         if self.head is None:
             raise IndexError
-        return self.head
+        if obj_type is False:
+            return self.head.get_item()
+        else:
+            return self.head
 
     def size(self):
         """returns the number of objects in Stack() as int"""

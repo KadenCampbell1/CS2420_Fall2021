@@ -1,4 +1,5 @@
 from stack import Stack
+from stack_object import StackObject
 
 
 def eval_postfix(expr):
@@ -9,34 +10,42 @@ def eval_postfix(expr):
     """
     if not isinstance(expr, str):
         raise ValueError
-
+    expr = expr.replace(" ", "")
+    if len(expr) == 1:
+        return float(expr)
+    elif len(expr) % 2 == 0:
+        raise SyntaxError(f"{expr}")
     stack = Stack()
 
     for i in range(len(expr)):
         if expr[i] == "+":
-            value1 = stack.pop()
-            value2 = stack.pop()
+            value1 = stack.pop(obj_type=True)
+            value2 = stack.pop(obj_type=True)
             result = float(value2.get_item()) + float(value1.get_item())
+            stack.push(result)
 
         elif expr[i] == "-":
-            value1 = stack.pop()
-            value2 = stack.pop()
+            value1 = stack.pop(obj_type=True)
+            value2 = stack.pop(obj_type=True)
             result = float(value2.get_item()) - float(value1.get_item())
+            stack.push(result)
 
         elif expr[i] == "*":
-            value1 = stack.pop()
-            value2 = stack.pop()
+            value1 = stack.pop(obj_type=True)
+            value2 = stack.pop(obj_type=True)
             result = float(value2.get_item()) * float(value1.get_item())
+            stack.push(result)
 
         elif expr[i] == "/":
-            value1 = stack.pop()
-            value2 = stack.pop()
+            value1 = stack.pop(obj_type=True)
+            value2 = stack.pop(obj_type=True)
             result = float(value2.get_item()) / float(value1.get_item())
+            stack.push(result)
 
         else:
             stack.push(expr[i].strip())
 
-    return result
+    return stack.pop(obj_type=True).get_item()
 
 
 def in2post(expr):
@@ -47,46 +56,83 @@ def in2post(expr):
     """
     if not isinstance(expr, str):
         raise ValueError
+    elif len(expr) % 2 == 0:
+        raise SyntaxError(f"{expr}")
 
     stack = Stack()
+    result = ""
 
     for i in range(len(expr)):
-        if expr[i] == "+":
-            # add to stack with priority
-            pass
+        if expr[i] == "(":
+            # add to stack with priority 0
+            stack.push(expr[i].strip())
+            item = stack.top(obj_type=True)
+            item.set_priority(0)
 
-        elif expr[i] == "-":
-            # add to stack with priority
-            pass
+        elif expr[i] == ")":
+            # add to stack with priority 3
+            item = StackObject(expr[i].strip())
+            item.set_priority(0)
 
-        elif expr[i] == "*":
-            # add to stack with priority
-            pass
+            while stack.size() > 0 \
+                    and stack.top(obj_type=True).get_priority() >= item.get_priority():
+                if stack.top(obj_type=True).get_priority() == 0:
+                    stack.pop(obj_type=True)
+                    break
+                result += stack.pop(obj_type=True).get_item()
 
-        elif expr[i] == "/":
-            # add to stack with priority
-            pass
+        elif expr[i] == "+" or expr[i] == "-" or expr[i] == "*" or expr[i] == "/":
+            item = StackObject(expr[i].strip())
+            if expr[i] == "+" or expr[i] == "-":
+                # priority 1
+                item.set_priority(1)
+
+            else:
+                # priority 2
+                item.set_priority(2)
+
+            while stack.size() > 0 and stack.top(obj_type=True).get_priority() != 0 \
+                    and stack.top(obj_type=True).get_priority() >= item.get_priority():
+                result += stack.pop(obj_type=True).get_item()
+
+            stack.push(item.get_item())
+            if expr[i] == "+" or expr[i] == "-":
+                # priority 1
+                stack.top(obj_type=True).set_priority(1)
+
+            else:
+                # priority 2
+                stack.top(obj_type=True).set_priority(2)
 
         else:
-            # stack.push(expr[i].strip())
             # store value in result
-            pass
+            result += expr[i].strip()
 
-    return expr
+    if stack.size() > 0 and stack.top(obj_type=True).get_priority() != 0:
+        result += stack.pop(obj_type=True).get_item()
+
+    return result
 
 
 def main():
     with open("data.txt") as DATA_FILE:
         data_lyst = [x.strip() for x in DATA_FILE.readlines()]
 
-    print(eval_postfix("34+"))
+    for i in data_lyst:
+        # write to outfile
+        print(f"infix: {i}")
+        postfix = in2post(i)
+        print(f"postfix: {postfix}")
+        print(f"answer: {eval_postfix(postfix)}\n")
 
-    # for i in data_lyst:
-    #     # write to outfile
-    #     print(f"infix: {i}")
-    #     postfix = in2post(i)
-    #     print(f"postfix: {postfix}")
-    #     print(f"answer: {eval_postfix(postfix)}\n")
+# find out what is missing
+    with open("out.txt") as OUT_FILE:
+        for i in data_lyst:
+            # write to outfile
+            OUT_FILE.write(f"infix: {i}")
+            postfix = in2post(i)
+            OUT_FILE.write(f"postfix: {postfix}")
+            OUT_FILE.write(f"answer: {eval_postfix(postfix)}\n")
 
 
 if __name__ == "__main__":
