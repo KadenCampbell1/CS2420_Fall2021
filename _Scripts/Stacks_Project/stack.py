@@ -30,19 +30,28 @@ class Stack:
 
     def pop(self):
         """removes and returns the top item in Stack()"""
-        pass
+        if self.head is None:
+            raise IndexError
+        obj = self.head
+        self.head = obj.get_next()
+        return obj
 
     def top(self):
         """returns the top item in Stack() without removing the top"""
-        pass
+        if self.head is None:
+            raise IndexError
+        return self.head
 
     def size(self):
         """returns the number of objects in Stack() as int"""
-        pass
+        count = 0
+        for i in self:
+            count += 1
+        return count
 
     def clear(self):
         """removes all objects in Stack()"""
-        pass
+        self.head = None
 
     def __str__(self):
         """returns string of Stack

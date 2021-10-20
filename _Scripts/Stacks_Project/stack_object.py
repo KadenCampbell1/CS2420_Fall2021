@@ -4,6 +4,7 @@ __init__ arguments:
 item -- type Any
 
 Functions:
+get_item() -- returns self.item
 set_next(node) -- sets pointer to node
 get_next() -- returns self.next
 __str__() -- returns string of StackObject as f"{item}"
@@ -27,6 +28,10 @@ class StackObject:
         """
         self.item = item
         self.next = None
+
+    def get_item(self):
+        """get_item() -- returns self.item"""
+        return self.item
 
     def set_next(self, node):
         """set_next(node) -- sets pointer to node
