@@ -125,14 +125,13 @@ def main():
         print(f"postfix: {postfix}")
         print(f"answer: {eval_postfix(postfix)}\n")
 
-# find out what is missing
-    with open("out.txt") as OUT_FILE:
+    with open("out.txt", "w") as OUT_FILE:
         for i in data_lyst:
             # write to outfile
-            OUT_FILE.write(f"infix: {i}")
+            OUT_FILE.write(f"infix: {i}\n")
             postfix = in2post(i)
-            OUT_FILE.write(f"postfix: {postfix}")
-            OUT_FILE.write(f"answer: {eval_postfix(postfix)}\n")
+            OUT_FILE.write(f"postfix: {postfix}\n")
+            OUT_FILE.write(f"answer: {eval_postfix(postfix)}\n\n")
 
 
 if __name__ == "__main__":
