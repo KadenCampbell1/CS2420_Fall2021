@@ -1,8 +1,8 @@
 def main():
-    value = ""
-    value += "hello "
-    value += "hello"
-    print(value)
+    st = [""]
+    if st[0] == False:
+        print("yes")
+    print("working")
 
 
 if __name__ == "__main__":
