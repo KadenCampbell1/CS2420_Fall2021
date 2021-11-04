@@ -1,8 +1,5 @@
 def main():
-    st = [""]
-    if st[0] == False:
-        print("yes")
-    print("working")
+    print("A" < "C")
 
 
 if __name__ == "__main__":

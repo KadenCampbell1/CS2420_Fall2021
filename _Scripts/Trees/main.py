@@ -24,6 +24,32 @@ class Pair:
     def __init__(self, letter, count=1):
         self.letter = letter
         self.count = count
+        self.left = None
+        self.right = None
+
+    def set_left(self, node):
+        """sets left to node
+
+        arguments:
+        node -- type Any
+        """
+        self.left = node
+
+    def get_left(self):
+        """returns self.left"""
+        return self.left
+
+    def set_right(self, node):
+        """sets right to node
+
+        arguments:
+        node -- type Any
+        """
+        self.right = node
+
+    def get_right(self):
+        """returns self.right"""
+        return self.right
 
     def __eq__(self, other):
         return self.letter == other.letter
@@ -60,11 +86,19 @@ def make_tree():
     :param: None
     :returns: A binary search tree
     """
-    pass
 
+    bst = BST()
+    with open("around-the-world-in-80-days-3.txt") as DATA_FILE:
+        for x in DATA_FILE:
+            for char in x:
+                if 65 <= ord(char) <= 90 or 97 <= ord(char) <= 122:
+                    pair = Pair(char)
+                    bst.add(pair)
+
+    print(bst.size(bst.get_head()))
 
 def main():
-    pass
+    make_tree()
 
 
 if __name__ == "__main__":
