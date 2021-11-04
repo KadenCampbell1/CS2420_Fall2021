@@ -27,6 +27,7 @@ rebalance() -- rebalances the tree and returns the modified tree
 class BST:
     def __init__(self):
         self.head = None
+        self.lyst = []
 
     def set_head(self, node):
         """sets head to node
@@ -46,15 +47,25 @@ class BST:
             return True
         return False
 
-    def size(self, node):
+    def size(self, node="self.head"):
         """Returns the number of nodes in the tree."""
+        if isinstance(node, str):
+            node = eval(node)
         if node is None:
             return 0
         return 1 + self.size(node.get_left()) + self.size(node.get_right())
 
-    def height(self):
+    def height(self, node="self.head"):
         """Returns the length of the path from the root to its deepest leaf."""
-        pass
+        if isinstance(node, str):
+            node = eval(node)
+        if node is None:
+            return 0
+
+        left_height = self.height(node.get_left())
+        right_height = self.height(node.get_right())
+
+        return 1 + max(left_height, right_height)
 
     def add(self, node):
         """Add node to its proper place in the tree and returns modified tree.
@@ -98,17 +109,42 @@ class BST:
         """
         pass
 
-    def find(self, node):
+    def find(self, node, travel="self.head"):
         """Finds and returns the matched node.
 
         arguments:
         node -- type Any
         """
-        pass
+        if isinstance(travel, str):
+            travel = eval(travel)
+        if self.head is None:
+            raise ValueError("Node not in tree")
+        if travel is None:
+            return None
+        if node == travel:
+            return node
+        else:
+            left = self.find(node, travel.get_left())
+            right = self.find(node, travel.get_right())
+            if left is not None:
+                return left
+            elif right is not None:
+                return right
+            elif left and right is None:
+                raise ValueError("Node not in tree.")
+            else:
+                return None
 
-    def inorder(self):
+    def inorder(self, node="self.head"):
         """Returns a list with data nodes in order of inorder traversal."""
-        pass
+        if isinstance(node, str):
+            node = eval(node)
+        if node:
+            self.lyst.append(self.inorder(node.get_left()))
+            self.lyst.append(node)
+            self.lyst.append(self.inorder(node.get_right()))
+        else:
+            return node
 
     def preorder(self):
         """Returns a list with data nodes in order of preorder traversal."""

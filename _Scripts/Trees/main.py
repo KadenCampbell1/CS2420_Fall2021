@@ -91,14 +91,19 @@ def make_tree():
     with open("around-the-world-in-80-days-3.txt") as DATA_FILE:
         for x in DATA_FILE:
             for char in x:
-                if 65 <= ord(char) <= 90 or 97 <= ord(char) <= 122:
+                if 48 <= ord(char) <= 57 or 65 <= ord(char) <= 90 or 97 <= ord(char) <= 122:
                     pair = Pair(char)
                     bst.add(pair)
 
-    print(bst.size(bst.get_head()))
+    bst.inorder()
+    print(bst.lyst)
+    return bst
+
 
 def main():
     make_tree()
+    # bst = BST()
+    # print(bst.find(Pair('A')))
 
 
 if __name__ == "__main__":
