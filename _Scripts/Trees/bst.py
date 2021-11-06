@@ -107,7 +107,51 @@ class BST:
         arguments:
         node -- type Any
         """
-        pass
+        node = self.find(node)
+
+        left = node.get_left()
+        right = node.get_right()
+        ordered_lyst = self.inorder()
+
+        if node == self.get_head():
+            for i, j in enumerate(ordered_lyst):
+                if j == node:
+                    replacement_temp = ordered_lyst[i + 1]
+                    reorder_temp = ordered_lyst[i + 2]
+                    break
+            replacement_temp.set_left(left)
+            replacement_temp.set_right(right)
+            self.set_head(replacement_temp)
+            reorder_temp.set_left(None)
+
+        else:
+            for k in ordered_lyst:
+                if self.find(k).get_left():
+                    if node == self.find(k).get_left():
+                        previous_node = k
+                        break
+                if self.find(k).get_right():
+                    if node == self.find(k).get_right():
+                        previous_node = k
+                        break
+            self.lyst = []
+            ordered_lyst = self.preorder(previous_node)
+            replacement_temp = ordered_lyst[-1]
+            if replacement_temp is node:
+                replacement_temp = None
+            reorder_temp = ordered_lyst[-2]
+            if left is not replacement_temp:
+                replacement_temp.set_left(left)
+            if right is not replacement_temp:
+                replacement_temp.set_right(right)
+            reorder_temp.set_left(None)
+            if previous_node.get_left() is node:
+                previous_node.set_left(replacement_temp)
+            else:
+                previous_node.set_right(replacement_temp)
+
+        self.lyst = []
+        return self
 
     def find(self, node, travel="self.head"):
         """Finds and returns the matched node.
@@ -122,7 +166,7 @@ class BST:
         if travel is None:
             return None
         if node == travel:
-            return node
+            return travel
         else:
             left = self.find(node, travel.get_left())
             right = self.find(node, travel.get_right())
@@ -140,23 +184,58 @@ class BST:
         if isinstance(node, str):
             node = eval(node)
         if node:
-            self.lyst.append(self.inorder(node.get_left()))
+            self.inorder(node.get_left())
             self.lyst.append(node)
-            self.lyst.append(self.inorder(node.get_right()))
-        else:
-            return node
+            self.inorder(node.get_right())
+        return self.lyst
 
-    def preorder(self):
+    def preorder(self, node="self.head"):
         """Returns a list with data nodes in order of preorder traversal."""
-        pass
+        if isinstance(node, str):
+            node = eval(node)
 
-    def postorder(self):
+        if node:
+            self.lyst.append(node)
+            self.preorder(node.get_left())
+            self.preorder(node.get_right())
+        return self.lyst
+
+    def postorder(self, node="self.head"):
         """Returns a list with data nodes in order of postorder traversal."""
-        pass
+        if isinstance(node, str):
+            node = eval(node)
+
+        if node:
+            self.postorder(node.get_left())
+            self.postorder(node.get_right())
+            self.lyst.append(node)
+        return self.lyst
 
     def rebalance(self):
         """Rebalances the tree and returns the modified tree."""
-        pass
+
+        temp_bst = BST()
+        ordered_lyst = self.inorder()
+        self.recursive_middle(ordered_lyst, temp_bst)
+
+        return temp_bst
+
+    def recursive_middle(self, lyst, add_bst):
+        """Recursively finds and adds middle to bst"""
+        if len(lyst) > 1:
+            middle = len(lyst)//2
+            node = lyst[middle]
+            node.set_left(None)
+            node.set_right(None)
+            add_bst.add(node)
+
+            l_lyst = lyst[:middle]
+            r_lyst = lyst[middle:]
+            if r_lyst == lyst:
+                r_lyst = []
+
+            self.recursive_middle(l_lyst, add_bst)
+            self.recursive_middle(r_lyst, add_bst)
 
     # def __str__(self):
     #     """returns string of BST as f"{node}"""

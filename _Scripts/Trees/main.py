@@ -95,15 +95,11 @@ def make_tree():
                     pair = Pair(char)
                     bst.add(pair)
 
-    bst.inorder()
-    print(bst.lyst)
     return bst
 
 
 def main():
     make_tree()
-    # bst = BST()
-    # print(bst.find(Pair('A')))
 
 
 if __name__ == "__main__":
