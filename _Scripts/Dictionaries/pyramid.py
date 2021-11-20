@@ -48,7 +48,7 @@ def weight_on(r, c):
 
 
 def main():
-    value = 7  # sys.argv[1]  # pyramid.py <number> "this is how to use sys.argv[1] in cmd"
+    value = sys.argv[1]  # pyramid.py <number> "this is how to use sys.argv[1] in cmd"
     with open("part3.txt", "w") as OUT_FILE:
         start = perf_counter()
         for i in range(int(value)):

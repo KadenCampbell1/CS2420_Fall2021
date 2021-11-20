@@ -6,6 +6,6 @@
 193.75 543.75 762.50 762.50 543.75 193.75 
 196.88 568.75 853.12 962.50 853.12 568.75 196.88 
 
-Elapsed time: 0.0003598999999999998 seconds
+Elapsed time: 0.0003960000000000005 seconds
 Number of function calls: 70
 Number of cache calls: 42
