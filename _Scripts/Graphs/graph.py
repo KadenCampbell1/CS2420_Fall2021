@@ -16,19 +16,22 @@ get_weight(src, dest) -- Returns the weight on edge src-dest
 build_matrix() -- Returns a matrix representation of the graph
 dfs(starting_vertex) -- Returns generator from traversing the graph in depth-first order
 bfs(starting_vertex) -- Returns a generator for traversing the graph in breadth-first order
+bfs_helper(starting_vertex) -- Builds a list for bfs() to use in breadth-first order traversal.
+dfs_helper(starting_vertex) -- Builds a list for dfs() to use in depth-first order traversal.
 dsp(src, dest) -- Returns a tuple of path length and list of path from dest to src
 dsp_all(src) -- Returns a dictionary of the shortest weighted path between src and all other vertices
 __str__() -- returns string of Graph using GraphViz
 """
 
 import math
-import graphviz
 
 
 class Graph:
     def __init__(self):
         self.info_graph = {}
         self.edge_graph = {}
+        self.bfs_list = [None]
+        self.dfs_list = [None]
 
     def add_vertex(self, label):
         """adds a vertex with the specified label.
@@ -115,14 +118,91 @@ class Graph:
 
         Starts from the specified vertex and raises a ValueError if the vertex does not exist.
         """
-        pass
+        if starting_vertex not in self.info_graph.keys():
+            raise ValueError("starting_vertex not in matrix")
+
+        self.dfs_list = [starting_vertex]
+        matrix = self.build_matrix()
+        self.dfs_helper(starting_vertex, matrix)
+
+        end = len(self.dfs_list)
+        current = 0
+        while current < end:
+            yield self.dfs_list[current]
+            current += 1
+
+    def dfs_helper(self, starting_vertex, matrix):
+        """Builds a list for dfs() to use in depth-first order traversal.
+
+        Starts from the specified vertex and raises a ValueError if the vertex does not exist.
+        """
+
+        if starting_vertex not in self.dfs_list:
+            self.dfs_list.append(starting_vertex)
+
+        node = starting_vertex
+        row = None
+        for i, j in enumerate(matrix[0]):
+            if j == node:
+                row = i + 1
+                break
+
+        if row is not None:
+            for k, l in enumerate(matrix[row]):
+                if l != math.inf and l != 0:
+                    if matrix[0][k] not in self.dfs_list:
+                        self.dfs_helper(matrix[0][k], matrix)
+        else:
+            return
 
     def bfs(self, starting_vertex):
         """Returns a generator for traversing the graph in breadth-first order.
 
         Starts from the specified vertex and raises a ValueError if the vertex does not exist.
         """
-        pass
+        if starting_vertex not in self.info_graph.keys():
+            raise ValueError("starting_vertex not in matrix")
+
+        self.bfs_helper(starting_vertex)
+
+        end = len(self.bfs_list)
+        current = 0
+        while current < end:
+            yield self.bfs_list[current]
+            current += 1
+
+    def bfs_helper(self, starting_vertex):
+        """Builds a list for bfs() to use in breadth-first order traversal.
+
+        Starts from the specified vertex and raises a ValueError if the vertex does not exist.
+        """
+
+        matrix = self.build_matrix()
+        self.bfs_list = [starting_vertex]
+        visited_nodes = []
+        current_node = starting_vertex
+
+        visited_index = -1
+        while visited_index < len(visited_nodes):
+            visited_index += 1
+
+            vertex_index = None
+            for i, j in enumerate(matrix[0]):
+                if j == current_node:
+                    vertex_index = i + 1
+                    break
+
+            if vertex_index is not None:
+                for k, value in enumerate(matrix[vertex_index]):
+                    if value != math.inf and value != 0:
+                        if matrix[0][k] not in visited_nodes:
+                            visited_nodes.append(matrix[0][k])
+
+            if visited_index < len(visited_nodes):
+                current_node = visited_nodes[visited_index]
+
+        for letter in visited_nodes:
+            self.bfs_list.append(letter)
 
     def dsp(self, src, dest):
         """Returns a tuple of path length and list of path from dest to src.
@@ -246,23 +326,96 @@ def test_bfs():
         print("data is 3")
 
 
+def test_dfs():
+    g = Graph()
+    g.add_vertex("A")
+    g.add_vertex("B")
+    g.add_vertex("C")
+    g.add_vertex("D")
+    g.add_vertex("E")
+    g.add_vertex("F")
+
+    g.add_edge("A", "B", 1.0)
+    g.add_edge("A", "C", 1.0)
+
+    g.add_edge("B", "D", 1.0)
+
+    g.add_edge("C", "E", 1.0)
+
+    g.add_edge("E", "F", 1.0)
+
+    gen = g.dfs("A")
+    data = [x for x in gen]
+    if data[0] == "A":
+        print("Data is A")
+    if data[-1] in ("D", "F"):
+        print("Data is in (D, F)")
+    if len(data) == 6:
+        print("data is len 6")
+    gen = g.dfs("C")
+    data = [x for x in gen]
+    if len(data) == 3:
+        print("data is len 3")
+
+
+def test_dsp():
+    g = Graph()
+    g.add_vertex("A")
+    g.add_vertex("B")
+    g.add_vertex("C")
+    g.add_vertex("D")
+    g.add_vertex("E")
+    g.add_vertex("F")
+
+    g.add_edge("A", "B", 2)
+    g.add_edge("A", "F", 9)
+
+    g.add_edge("B", "F", 6)
+    g.add_edge("B", "D", 15)
+    g.add_edge("B", "C", 8)
+
+    g.add_edge("C", "D", 1)
+
+    g.add_edge("E", "C", 7)
+    g.add_edge("E", "D", 3)
+
+    g.add_edge("F", "B", 6)
+    g.add_edge("F", "E", 3)
+
+    path = g.dsp("A", "B")
+    if path == (2, ['A', 'B']):
+        print("path is (2, [A,B])")
+    path = g.dsp("A", "C")
+    if path == (10, ['A', 'B', 'C']):
+        print("path == (10, ['A', 'B', 'C'])")
+    path = g.dsp("A", "D")
+    if path == (11, ['A', 'B', 'C', 'D']):
+        print("path == (11, ['A', 'B', 'C', 'D'])")
+    path = g.dsp("A", "F")
+    if path == (8, ['A', 'B', 'F']):
+        print("path == (8, ['A', 'B', 'F'])")
+    path = g.dsp("D","A")
+    if path == (math.inf, []):
+        print("path == (math.inf, [])")
+
+
 def main():
     """Tests Graph ADT"""
-    # g = Graph()
-    # g.add_vertex("A")
-    # g.add_vertex("B")
-    # g.add_edge("A", "B", 10.0)
-    # print(g.get_weight("A", "B"))
-    # g.add_vertex("C")
-    # g.add_edge("A", "C", 10.0)
-    # print(g.get_weight("A", "B"))
-    # g.add_vertex("D")
-    #
-    # print(g.build_matrix())
+    """you will do the following:
+    1. Construct the graph shown in Figure 1 using your ADT.
+    2. Print it to the console in GraphViz notation as shown in Figure 1. 
+    3. Print results of DFS starting with vertex “A” as shown in Figure 2.
+    4. BFS starting with vertex “A” as shown in Figure 3.
+    5. Print the path from vertex “A” to vertex “F” (not shown here) using Djikstra’s 
+    shortest path algorithm (DSP) as a string like #3 and #4.
+    6. Print the shortest paths from “A” to each other vertex, one path per line using DSP
+    """
 
     # test_vertex_edge_weight()
     # test_print()
-    test_bfs()
+    # test_bfs()
+    # test_dfs()
+    test_dsp()
 
 
 if __name__ == "__main__":
