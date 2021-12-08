@@ -54,7 +54,7 @@ class Graph:
             raise ValueError
         if not isinstance(dest, str):
             raise ValueError
-        if not isinstance(w, float):
+        if not isinstance(w, float) and not isinstance(w, int):
             raise ValueError
         keys = self.info_graph.keys()
         if src not in keys:
@@ -226,7 +226,7 @@ class Graph:
         graph_str = "digraph G {\n"
         for i in self.edge_graph.keys():
             for j in self.edge_graph[i]:
-                graph_str += f'   {i} -> {j[0]} [label="1.0",weight="{j[1]}"];\n'
+                graph_str += f'   {i} -> {j[0]} [label="{j[1]:.1f}",weight="{j[1]:.1f}"];\n'
         graph_str += "}\n"
         return graph_str
 
@@ -410,7 +410,46 @@ def main():
     shortest path algorithm (DSP) as a string like #3 and #4.
     6. Print the shortest paths from “A” to each other vertex, one path per line using DSP
     """
+    '''
+    g = Graph()
+    g.add_vertex("A")
+    g.add_vertex("B")
+    g.add_vertex("C")
+    g.add_vertex("D")
+    g.add_vertex("E")
+    g.add_vertex("F")
 
+    g.add_edge("A", "B", 2)
+    g.add_edge("A", "F", 9)
+
+    g.add_edge("B", "C", 8)
+    g.add_edge("B", "D", 15)
+    g.add_edge("B", "F", 6)
+
+    g.add_edge("C", "D", 1)
+
+    g.add_edge("E", "C", 7)
+    g.add_edge("E", "D", 3)
+
+    g.add_edge("F", "B", 6)
+    g.add_edge("F", "E", 3)
+
+    print(g)
+
+    print("starting DFS with vertex A")
+    for vertex in g.dfs("A"):
+        print(vertex, end="")
+    print()
+
+    print("starting BFS with vertex A")
+    for vertex in g.bfs("A"):
+        print(vertex, end="")
+    print()
+
+    # print dsp from A to F
+
+    # print dsp from A to each other vertex. One path per line.
+    '''
     # test_vertex_edge_weight()
     # test_print()
     # test_bfs()
