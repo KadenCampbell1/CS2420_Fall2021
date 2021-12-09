@@ -211,17 +211,22 @@ class Graph:
         If no path exists, returns the tuple (math.inf, empty list.)
         """
         matrix = self.build_matrix()
-        paths = ()
         visited_nodes = []
+        temp_visited = [None]
         temp_paths = {}
         current_weight = 0
         current_node = src
 
         for nodes in matrix[0]:
-            temp_paths[nodes] = (math.inf, [])
+            temp_paths[nodes] = (math.inf, [None])
 
         while current_node != dest:
             visited_nodes.append(current_node)
+            if temp_visited[-1] != current_node:
+                temp_visited.append(current_node)
+            if temp_visited[0] is None:
+                temp_visited.pop(0)
+
             row = None
             for i, j in enumerate(matrix[0]):
                 if j == current_node:
@@ -233,26 +238,23 @@ class Graph:
                     if value != math.inf and value != 0:
                         temp_weight = value + current_weight
                         if temp_weight < temp_paths[matrix[0][k]][0]:
-                            if len(temp_paths[matrix[0][k]][-1]) <= 0:
-                                path_nodes = list(visited_nodes)
-                                path_nodes.append(matrix[0][k])
-                            else:
-                                path_nodes = list(temp_paths[matrix[0][k]][-1])
+                            path_nodes = list(temp_visited)
+                            path_nodes.append(matrix[0][k])
                             temp_paths[matrix[0][k]] = (value + current_weight, path_nodes)
 
                 temp_weight = math.inf
                 for key in temp_paths.keys():
                     weight = temp_paths[key][0]
-                    if weight < temp_weight and key not in visited_nodes:
+                    if weight <= temp_weight and key not in visited_nodes:
                         temp_weight = weight
                         next_node = key
                 current_node = next_node
-                # set up second list like visited_nodes that resets here
+                temp_visited = temp_paths[next_node][-1]
                 current_weight = temp_weight
 
-        paths = temp_paths[dest]
-
-        return paths
+        if temp_paths[dest][-1][0] is None:
+            temp_paths[dest] = (math.inf, [])
+        return temp_paths[dest]
 
     def dsp_all(self, src):
         """Returns a dictionary of the shortest weighted path between src and all other vertices.
@@ -264,8 +266,13 @@ class Graph:
         self.all_paths = {}
 
         for i in matrix[0]:
-            if i != src:
-                self.all_paths[i] = self.dsp(src, i)
+            self.all_paths[i] = self.dsp(src, i)
+
+        for key in self.all_paths.keys():
+            if key == src:
+                self.all_paths[key] = [src]
+            else:
+                self.all_paths[key] = self.all_paths[key][-1]
 
         return self.all_paths
 
@@ -279,174 +286,6 @@ class Graph:
                 graph_str += f'   {i} -> {j[0]} [label="{j[1]:.1f}",weight="{j[1]:.1f}"];\n'
         graph_str += "}\n"
         return graph_str
-
-
-def test_vertex_edge_weight():
-    g = Graph()
-    try:
-        g.add_vertex(0)
-    except ValueError:
-        print("1ValueError True")
-    g.add_vertex("A")
-    x = g.add_vertex("B")
-    try:
-        g.add_edge("A", "cat", 10.0)
-
-    except ValueError:
-        print("2ValueError True")
-    try:
-        g.add_edge("A", "B", "cat")
-
-    except ValueError:
-        print("3ValueError True")
-    if isinstance(x, Graph):
-        print("4instance True")
-    x = g.add_edge("A", "B", 10.0)
-    if g.get_weight("A", "B") == 10:
-        print("5is 10")
-    if g.get_weight("B", "A") == math.inf:
-        print("6is inf")
-    if isinstance(x, Graph):
-        print("7is instance")
-
-
-def test_print():
-    g = Graph()
-    g.add_vertex("A")
-    g.add_vertex("B")
-    g.add_vertex("C")
-    g.add_vertex("D")
-    g.add_vertex("E")
-    g.add_vertex("F")
-
-    g.add_edge("A", "B", 1.0)
-    g.add_edge("A", "C", 1.0)
-
-    g.add_edge("B", "D", 1.0)
-
-    g.add_edge("C", "E", 1.0)
-
-    g.add_edge("E", "F", 1.0)
-
-
-    expected ='''digraph G {
-   A -> B [label="1.0",weight="1.0"];
-   A -> C [label="1.0",weight="1.0"];
-   B -> D [label="1.0",weight="1.0"];
-   C -> E [label="1.0",weight="1.0"];
-   E -> F [label="1.0",weight="1.0"];
-}
-'''
-    output = str(g)
-    if output == expected:
-        print("True")
-    else:
-        print("False")
-
-
-def test_bfs():
-    g = Graph()
-    g.add_vertex("A")
-    g.add_vertex("B")
-    g.add_vertex("C")
-    g.add_vertex("D")
-    g.add_vertex("E")
-    g.add_vertex("F")
-
-    g.add_edge("A", "B", 1.0)
-    g.add_edge("A", "C", 1.0)
-
-    g.add_edge("B", "D", 1.0)
-
-    g.add_edge("C", "E", 1.0)
-
-    g.add_edge("E", "F", 1.0)
-
-    gen = g.bfs("A")
-    data = [x for x in gen]
-    if data[0] == "A":
-        print("data is A")
-    if data[-1] == "F":
-        print("data is F")
-    if len(data) == 6:
-        print("len is 6")
-    gen = g.bfs("C")
-    data = [x for x in gen]
-    if len(data) == 3:
-        print("data is 3")
-
-
-def test_dfs():
-    g = Graph()
-    g.add_vertex("A")
-    g.add_vertex("B")
-    g.add_vertex("C")
-    g.add_vertex("D")
-    g.add_vertex("E")
-    g.add_vertex("F")
-
-    g.add_edge("A", "B", 1.0)
-    g.add_edge("A", "C", 1.0)
-
-    g.add_edge("B", "D", 1.0)
-
-    g.add_edge("C", "E", 1.0)
-
-    g.add_edge("E", "F", 1.0)
-
-    gen = g.dfs("A")
-    data = [x for x in gen]
-    if data[0] == "A":
-        print("Data is A")
-    if data[-1] in ("D", "F"):
-        print("Data is in (D, F)")
-    if len(data) == 6:
-        print("data is len 6")
-    gen = g.dfs("C")
-    data = [x for x in gen]
-    if len(data) == 3:
-        print("data is len 3")
-
-
-def test_dsp():
-    g = Graph()
-    g.add_vertex("A")
-    g.add_vertex("B")
-    g.add_vertex("C")
-    g.add_vertex("D")
-    g.add_vertex("E")
-    g.add_vertex("F")
-
-    g.add_edge("A", "B", 2)
-    g.add_edge("A", "F", 9)
-
-    g.add_edge("B", "F", 6)
-    g.add_edge("B", "D", 15)
-    g.add_edge("B", "C", 8)
-
-    g.add_edge("C", "D", 1)
-
-    g.add_edge("E", "C", 7)
-    g.add_edge("E", "D", 3)
-
-    g.add_edge("F", "B", 6)
-    g.add_edge("F", "E", 3)
-
-    path = g.dsp("A", "B")
-    if path == (2, ['A', 'B']):
-        print("path is (2, [A,B])")
-    path = g.dsp("A", "C")
-    if path == (10, ['A', 'B', 'C']):
-        print("path == (10, ['A', 'B', 'C'])")
-    path = g.dsp("A", "D")
-    if path == (11, ['A', 'B', 'C', 'D']):
-        print("path == (11, ['A', 'B', 'C', 'D'])")
-    path = g.dsp("A", "F")
-    if path == (8, ['A', 'B', 'F']):
-        print("path == (8, ['A', 'B', 'F'])")
-    path = g.dsp("D","A")
-    if path == (math.inf, []):
-        print("path == (math.inf, [])")
 
 
 def main():
@@ -496,16 +335,18 @@ def main():
         print(vertex, end="")
     print()
 
-    # print dsp from A to F
+    print("starting DSP with vertex A to Vertex F")
+    for vertex in g.dsp("A", "F")[-1]:
+        print(vertex, end="")
+    print()
 
     # print dsp from A to each other vertex. One path per line.
-    print(g.dsp("A", "D"))
-
-    # test_vertex_edge_weight()
-    # test_print()
-    # test_bfs()
-    # test_dfs()
-    # test_dsp()
+    print("Starting DSP all with vertex A")
+    for values in g.dsp_all("A").values():
+        print(f"{values[-1]}:", end="")
+        for vertex in values:
+            print(vertex, end="")
+        print()
 
 
 if __name__ == "__main__":
