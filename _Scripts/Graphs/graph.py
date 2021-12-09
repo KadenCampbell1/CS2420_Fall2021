@@ -30,6 +30,7 @@ class Graph:
     def __init__(self):
         self.info_graph = {}
         self.edge_graph = {}
+        self.all_paths = {}
         self.bfs_list = [None]
         self.dfs_list = [None]
 
@@ -209,7 +210,49 @@ class Graph:
 
         If no path exists, returns the tuple (math.inf, empty list.)
         """
-        pass
+        matrix = self.build_matrix()
+        paths = ()
+        visited_nodes = []
+        temp_paths = {}
+        current_weight = 0
+        current_node = src
+
+        for nodes in matrix[0]:
+            temp_paths[nodes] = (math.inf, [])
+
+        while current_node != dest:
+            visited_nodes.append(current_node)
+            row = None
+            for i, j in enumerate(matrix[0]):
+                if j == current_node:
+                    row = i + 1
+                    break
+
+            if row is not None:
+                for k, value in enumerate(matrix[row]):
+                    if value != math.inf and value != 0:
+                        temp_weight = value + current_weight
+                        if temp_weight < temp_paths[matrix[0][k]][0]:
+                            if len(temp_paths[matrix[0][k]][-1]) <= 0:
+                                path_nodes = list(visited_nodes)
+                                path_nodes.append(matrix[0][k])
+                            else:
+                                path_nodes = list(temp_paths[matrix[0][k]][-1])
+                            temp_paths[matrix[0][k]] = (value + current_weight, path_nodes)
+
+                temp_weight = math.inf
+                for key in temp_paths.keys():
+                    weight = temp_paths[key][0]
+                    if weight < temp_weight and key not in visited_nodes:
+                        temp_weight = weight
+                        next_node = key
+                current_node = next_node
+                # set up second list like visited_nodes that resets here
+                current_weight = temp_weight
+
+        paths = temp_paths[dest]
+
+        return paths
 
     def dsp_all(self, src):
         """Returns a dictionary of the shortest weighted path between src and all other vertices.
@@ -217,7 +260,14 @@ class Graph:
          Implements Dijkstra's Shortest Path algorithm. The key is the the destination vertex label,
          the value is a list of vertices on the path from src to dest.
          """
-        pass
+        matrix = self.build_matrix()
+        self.all_paths = {}
+
+        for i in matrix[0]:
+            if i != src:
+                self.all_paths[i] = self.dsp(src, i)
+
+        return self.all_paths
 
     def __str__(self):
         """returns string of Graph using GraphViz notation"""
@@ -410,7 +460,7 @@ def main():
     shortest path algorithm (DSP) as a string like #3 and #4.
     6. Print the shortest paths from “A” to each other vertex, one path per line using DSP
     """
-    '''
+
     g = Graph()
     g.add_vertex("A")
     g.add_vertex("B")
@@ -449,12 +499,13 @@ def main():
     # print dsp from A to F
 
     # print dsp from A to each other vertex. One path per line.
-    '''
+    print(g.dsp("A", "D"))
+
     # test_vertex_edge_weight()
     # test_print()
     # test_bfs()
     # test_dfs()
-    test_dsp()
+    # test_dsp()
 
 
 if __name__ == "__main__":
